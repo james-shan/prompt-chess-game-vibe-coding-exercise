@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import PlayerCard from './PlayerCard';
 
 function Leaderboard({ players, pinnedPlayer, onPin, onPlayerClick, searchQuery }) {
-  const [sortBy, setSortBy] = useState('Rank');
+  const [sortBy, setSortBy] = useState('Win_Rate');
 
   // Filter players by search query
   const filteredPlayers = useMemo(() => {
@@ -33,9 +33,8 @@ function Leaderboard({ players, pinnedPlayer, onPin, onPlayerClick, searchQuery 
           return b.Win_Rate - a.Win_Rate;
         case 'Rating_Mu':
           return b.Rating_Mu - a.Rating_Mu;
-        case 'Rank':
         default:
-          return a.Rank - b.Rank;
+          return b.Win_Rate - a.Win_Rate;
       }
     });
 
@@ -52,11 +51,8 @@ function Leaderboard({ players, pinnedPlayer, onPin, onPlayerClick, searchQuery 
     if (pinnedPlayer && player.Player === pinnedPlayer) {
       return '📌';
     }
-    // If sorting by something other than Rank, show index + 1
-    if (sortBy !== 'Rank') {
-      return index + 1;
-    }
-    return player.Rank;
+    // Show position based on current sort order
+    return index + 1;
   };
 
   return (
@@ -71,7 +67,6 @@ function Leaderboard({ players, pinnedPlayer, onPin, onPlayerClick, searchQuery 
           onChange={(e) => setSortBy(e.target.value)}
           className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="Rank">Rank</option>
           <option value="Win_Rate">Win Rate</option>
           <option value="Rating_Mu">Rating (μ)</option>
         </select>
